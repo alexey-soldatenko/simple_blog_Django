@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+{%load staticfiles%}
+<html>
+<head>
+	<title>{{article.title}}</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/article.css' %}">
+</head>
+<body>
+<div id="head">
+<span style="float: left;"><a href="/">Home</a></span>
+<span>My Blog</span>
+</div>
+
+<div class="center_box">
+	<div style="text-align: center;"><b>{{article.title}}</b></div>
+	<div class="text">{{article.text|linebreaks}}</div>
+
+	<div style="margin-top: 10px;">
+		{%if previous%}
+		<span style="float: left"><a href="/article_{{previous.id}}">&lt;&lt;Previous</a></span>
+		{%endif%}
+		
+		{%if next%}
+		<span style="float: right"><a href="/article_{{next.id}}">Next&gt;&gt;</a></span>
+		{%endif%}
+	</div>
+
+	<div style="clear: both;"></div>
+	<div class="comments_box">
+	{%if comments%}
+		<span style="font-size: 1.2em;">Комментарии:</span>
+		{%for comment in comments%}
+			<div style="height: 10px; background: white;"></div>
+			<div class="comment">
+			<div>{{comment.author}}:</div>
+			<div class="comment_text">{{comment.text}}</div>
+			<div style="font-size: 0.7em;">{{comment.date|date:"d M Y"}}</div>
+			</div>
+		{%endfor%}
+	{%endif%}
+	
+	</div>
+
+	<div class="comment_form">
+	<span style="color: gray; font-size: 1.2em;">Оставьте ваш комментарий:</span>
+		<table style="width: 100%;">
+		<form action="/article_{{article.id}}" method="post">
+		{%csrf_token%}
+			<tr>
+				
+				<td><input type="text" name="name" placeholder="Ваше имя" required></td>
+			</tr>
+			<tr>
+				
+				<td><textarea rows="5" name="text" placeholder="Комментарий" required></textarea></td>
+			</tr>
+			<tr>
+				
+				<td><input type="text" name="article_id" value="{{article.id}}" hidden></td>
+			</tr>
+			<tr>
+				<td style="text-align: right;"><input type="submit" value="Отправить"></td>
+			</tr>
+		</form>
+		</table>
+	</div>
+</div>
+
+<div id="footer">&copy; Alexey Soldatenko 2018</div>
+</body>
+</html>

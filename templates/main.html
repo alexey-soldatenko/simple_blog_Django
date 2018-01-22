@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+{%load staticfiles%}
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript">
+	var block_width;
+	var coord;
+	var top_coord;
+	</script>
+	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+</head>
+<body>
+<div id="head">My Blog</div>
+
+<div class="center_box">
+<div class="tags">
+<div id="floatElement">
+	<div>Tags:</div>
+	<div>
+		{%for tag in tags%}
+		<div class="tag_name"><a href="/tag/{{tag.slug}}">{{tag.title}}</a></div>
+		{%endfor%}
+	</div>
+	
+	</div>
+</div>
+
+<div class="articles_box">
+	{%for article in articles%}
+	{%if forloop.counter > 1%}
+	<hr>
+	{%endif%}
+		<div class="article_title" >
+		<span><b>{{article.0.title}}</b></span> 
+		<span style="color: black;">
+		({{article.0.publish_date|date:"d M Y"}} 
+		- <img width="15px" src="{% static 'img/comments.png' %}">{{article.1}})
+		</span></div>
+		<div class="article_text">{{article.0.text|truncatewords:30}}</div>
+		<div class="read_more">
+		<a href="/article_{{article.0.id}}" style="color: #00008B;">Read more...</a></div>
+	{%empty%}
+		<div style="text-align: center;">Пока ничего ;(</div>
+	{%endfor%}
+
+	{%if page.paginator.num_pages > 1%}
+		<div style="margin: 20px auto; text-align: center">
+		{%if page.has_previous%}
+		<span><a href="/{{link_type}}/{{page.previous_page_number}}">&lt;</a></span>
+		{%endif%}
+		{%for num in page.paginator.page_range%}
+			{%if num < page.number|add:"2" and num > page.number|add:"-2"%}
+
+				<span>
+					{%if num != page.number%}
+						<a href="/{{link_type}}/{{num}}">{{num}}</a>
+					{%else%}
+						<span style="color: red">{{num}}</span>
+				</span>
+					{%endif%}
+			{%endif%}
+			{%if num == page.number|add:"3" or num == page.number|add:"-3"%}
+			<span>...</span>
+			{%endif%}
+		{%endfor%}
+		{%if page.has_next%}
+		<span><a href="/{{link_type}}/{{page.next_page_number}}">&gt;</a></span>
+		{%endif%}
+		</div>
+	{%else%}
+		<div style="height: 20px;"></div>
+	{%endif%}
+
+	
+</div>
+
+</div>
+
+
+<div id="footer" >&copy; Alexey Soldatenko 2018</div>
+</body>
+</html>
